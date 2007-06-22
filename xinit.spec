@@ -1,14 +1,11 @@
 Name: xinit
-Version: 1.0.2
-Release: %mkrel 6
+Version: 1.0.4
+Release: %mkrel 1
 Summary: Initialize an X session
 Group: System/X11
 Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
 # (fc) 1.0.2-2mdv readd modifications for startx (argument parsing)
-# catch sigterm in xinit and startx
 Patch0: xinit-1.0.2-startx.patch
-# check setuid return value to make sure we drop user privilegies
-Patch1: http://xorg.freedesktop.org/releases/X11R7.1/patches/xinit-1.0.2-setuid.diff
 License: MIT
 BuildRoot: %{_tmppath}/%{name}-root
 Requires: xinitrc
@@ -26,7 +23,6 @@ xinit will kill the X server and then terminate.
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1 -b .startx
-%patch1 -p0 -b .setuid
 
 %build
 %configure2_5x	--x-includes=%{_includedir}\
@@ -55,7 +51,7 @@ fi
 %{_bindir}/xinit
 %{_bindir}/startx
 %{_libdir}/X11/xinit
-%{_mandir}/man1/startx.1x.bz2
-%{_mandir}/man1/xinit.1x.bz2
+%{_mandir}/man1/startx.1*.bz2
+%{_mandir}/man1/xinit.1*.bz2
 
 
