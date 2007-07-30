@@ -6,7 +6,7 @@
 
 Name: xinit
 Version: 1.0.4
-Release: %mkrel 2
+Release: %mkrel 3
 Summary: Initialize an X session
 Group: System/X11
 Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
@@ -14,6 +14,8 @@ Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.
 Patch0: xinit-1.0.2-startx.patch
 # (fc) 1.0.4-2mdv add ConsoleKit support (Fedora)
 Patch1: xinit-1.0.4-poke-ck.patch
+# (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
+Patch2: xinit-1.0.4-client-session.patch
 License: MIT
 BuildRoot: %{_tmppath}/%{name}-root
 Requires: xinitrc
@@ -38,6 +40,7 @@ xinit will kill the X server and then terminate.
 
 %if !%{bootstrap}
 %patch1 -p1 -b .poke-ck
+%patch2 -p1 -b .client-session
 
 #needed by patch1
 autoconf
