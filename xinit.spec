@@ -17,6 +17,7 @@ Patch1: xinit-1.0.4-poke-ck.patch
 # (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
 Patch2: xinit-1.0.4-client-session.patch
 License: MIT
+BuildRoot: %{_tmppath}/%{name}-root
 Requires: xinitrc
 
 BuildRequires: libx11-devel >= 1.0.0
