@@ -6,7 +6,7 @@
 
 Name: xinit
 Version: 1.0.8
-Release: %mkrel 1
+Release: %mkrel 2
 Summary: Initialize an X session
 Group: System/X11
 Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
@@ -56,17 +56,8 @@ autoconf
 rm -rf %{buildroot}
 %makeinstall_std
 
-#don't use xorg xinitrc file, use our own, provided by xinitrc package
-rm -fr %{buildroot}/%{_libdir}/X11/xinit
-ln -s ../../../../%{_sysconfdir}/X11/xinit %{buildroot}/%{_libdir}/X11/xinit
-
 %clean
 rm -rf %{buildroot}
-
-%pre
-if [ ! -L %{_libdir}/X11/xinit ]; then
- rm -fr %{_libdir}/X11/xinit
-fi
 
 %files
 %defattr(-,root,root)
@@ -75,5 +66,5 @@ fi
 %{_libdir}/X11/xinit
 %{_mandir}/man1/startx.1*
 %{_mandir}/man1/xinit.1*
-
-
+#don't use xorg xinitrc file, use our own, provided by xinitrc package
+%exclude %{_libdir}/X11/xinit
