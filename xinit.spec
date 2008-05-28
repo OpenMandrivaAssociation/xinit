@@ -5,13 +5,13 @@
 %{?_with_bootstrap: %{expand: %%define bootstrap 1}}
 
 Name: xinit
-Version: 1.0.8
-Release: %mkrel 2
+Version: 1.0.9
+Release: %mkrel 1
 Summary: Initialize an X session
 Group: System/X11
 Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
 # (fc) 1.0.2-2mdv readd modifications for startx (argument parsing)
-Patch0: xinit-1.0.8-startx.patch
+Patch0: xinit-1.0.9-startx.patch
 # (fc) 1.0.4-2mdv add ConsoleKit support (Fedora)
 Patch1: xinit-1.0.4-poke-ck.patch
 # (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
