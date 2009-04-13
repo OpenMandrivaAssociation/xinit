@@ -13,7 +13,7 @@ Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.
 # (fc) 1.0.2-2mdv readd modifications for startx (argument parsing)
 Patch0: xinit-1.1.0-startx.patch
 # (fc) 1.0.4-2mdv add ConsoleKit support (Fedora)
-Patch1: xinit-1.0.4-poke-ck.patch
+Patch1: xinit-1.1.0-poke-ck.patch
 # (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
 Patch2: xinit-1.0.4-client-session.patch
 License: MIT
@@ -43,13 +43,11 @@ xinit will kill the X server and then terminate.
 %patch2 -p1 -b .client-session
 
 #needed by patch1
-autoconf
+autoreconf -fi
 %endif
 
 %build
-%configure2_5x	--x-includes=%{_includedir}\
-		--x-libraries=%{_libdir}
-
+%configure2_5x
 %make XINITDIR=/etc/X11/xinit
 
 %install
