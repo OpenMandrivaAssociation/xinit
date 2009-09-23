@@ -6,7 +6,7 @@
 
 Name: xinit
 Version: 1.1.0
-Release: %mkrel 4
+Release: %mkrel 5
 Summary: Initialize an X session
 Group: System/X11
 Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
