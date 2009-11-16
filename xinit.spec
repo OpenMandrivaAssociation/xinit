@@ -6,7 +6,7 @@
 
 Name: xinit
 Version: 1.1.0
-Release: %mkrel 5
+Release: %mkrel 6
 Summary: Initialize an X session
 Group: System/X11
 Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
@@ -45,16 +45,16 @@ xinit will kill the X server and then terminate.
 %setup -q -n %{name}-%{version}
 %patch0 -p1 -b .startx
 
-%if !%{bootstrap}
-%patch1 -p1 -b .poke-ck
-%endif
+#if !%{bootstrap}
+#patch1 -p1 -b .poke-ck
+#endif
 %patch2 -p1 -b .client-session
 %patch3 -p1 -b .unset
 
 #needed by patch1
-%if !%{bootstrap}
-autoreconf -fi
-%endif
+#if !%{bootstrap}
+#autoreconf -fi
+#endif
 
 %build
 %configure2_5x
