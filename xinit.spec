@@ -5,21 +5,23 @@
 %{?_with_bootstrap: %{expand: %%define bootstrap 1}}
 
 Name: xinit
-Version: 1.1.0
-Release: %mkrel 7
+Version: 1.2.0
+Release: %mkrel 1
 Summary: Initialize an X session
 Group: System/X11
 Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
 # (fc) 1.1.0-4mdv allow to init CK easily (Fedora)
 Source1: ck-xinit-session.c
 # (fc) 1.0.2-2mdv readd modifications for startx (argument parsing)
-Patch0: xinit-1.1.0-startx.patch
+Patch0: xinit-1.2.0-startx-arguments.patch
 # (fc) 1.0.4-2mdv add ConsoleKit support (Fedora)
 Patch1: xinit-1.1.0-poke-ck.patch
 # (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
 Patch2: xinit-1.0.4-client-session.patch
 # (fc) unset XDG_SESSION_COOKIE in startx (Fedora bug #489999)
 Patch3: xinit-1.0.9-unset.patch
+# (pz) this patch was taken from the old startx.patch
+Patch4: xinit-1.2.0-replace-xterm-for-xvt.patch
 
 License: MIT
 BuildRoot: %{_tmppath}/%{name}-root
@@ -50,6 +52,7 @@ xinit will kill the X server and then terminate.
 #endif
 %patch2 -p1 -b .client-session
 %patch3 -p1 -b .unset
+%patch4 -p1 -b .xvt
 
 #needed by patch1
 #if !%{bootstrap}
