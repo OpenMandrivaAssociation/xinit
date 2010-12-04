@@ -64,7 +64,7 @@ xinit will kill the X server and then terminate.
 %make XINITDIR=/etc/X11/xinit
 
 %if !%{bootstrap}
-%{__cc} -o ck-xinit-session \
+%{__cc} -o ck-xinit-session %ldflags \
 	`pkg-config --cflags ck-connector dbus-1` $RPM_OPT_FLAGS \
 	$RPM_SOURCE_DIR/ck-xinit-session.c \
 	`pkg-config --libs ck-connector dbus-1`
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 install -m755 ck-xinit-session $RPM_BUILD_ROOT/%{_bindir}
 %endif
 
+#don't use xorg xinitrc file, use our own, provided by xinitrc package
+rm -fr %buildroot%{_libdir}/X11/xinit/xinitrc
+
 %clean
 rm -rf %{buildroot}
 
@@ -88,8 +91,5 @@ rm -rf %{buildroot}
 %if !%{bootstrap}
 %{_bindir}/ck-xinit-session
 %endif
-%{_libdir}/X11/xinit
 %{_mandir}/man1/startx.1*
 %{_mandir}/man1/xinit.1*
-#don't use xorg xinitrc file, use our own, provided by xinitrc package
-%exclude %{_libdir}/X11/xinit
