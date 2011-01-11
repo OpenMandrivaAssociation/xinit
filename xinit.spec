@@ -5,8 +5,8 @@
 %{?_with_bootstrap: %{expand: %%define bootstrap 1}}
 
 Name: xinit
-Version: 1.2.1
-Release: %mkrel 2
+Version: 1.3.0
+Release: %mkrel 1
 Summary: Initialize an X session
 Group: System/X11
 Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
