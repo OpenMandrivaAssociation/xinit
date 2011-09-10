@@ -5,8 +5,8 @@
 %{?_with_bootstrap: %{expand: %%define bootstrap 1}}
 
 Name: xinit
-Version: 1.3.0
-Release: %mkrel 2
+Version: 1.3.1
+Release: %mkrel 1
 Summary: Initialize an X session
 Group: System/X11
 Source0: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
@@ -21,7 +21,7 @@ Patch2: xinit-1.0.4-client-session.patch
 # (fc) unset XDG_SESSION_COOKIE in startx (Fedora bug #489999)
 Patch3: xinit-1.0.9-unset.patch
 # (pz) this patch was taken from the old startx.patch
-Patch4: xinit-1.2.0-replace-xterm-for-xvt.patch
+Patch4: xinit-1.3.1-replace-xterm-for-xvt.patch
 
 License: MIT
 BuildRoot: %{_tmppath}/%{name}-root
@@ -60,8 +60,10 @@ xinit will kill the X server and then terminate.
 #endif
 
 %build
-%configure2_5x
-%make XINITDIR=/etc/X11/xinit
+%configure2_5x \
+    --with-xinitdir=/etc/X11/xinit
+
+%make
 
 %if !%{bootstrap}
 %{__cc} -o ck-xinit-session %ldflags \
@@ -75,11 +77,11 @@ xinit will kill the X server and then terminate.
 rm -rf %{buildroot}
 %makeinstall_std
 %if !%{bootstrap}
-install -m755 ck-xinit-session $RPM_BUILD_ROOT/%{_bindir}
+install -m755 ck-xinit-session %{buildroot}%{_bindir}
 %endif
 
 #don't use xorg xinitrc file, use our own, provided by xinitrc package
-rm -fr %buildroot%{_libdir}/X11/xinit/xinitrc
+rm -fr %{buildroot}%{_libdir}/X11/xinit/xinitrc
 
 %clean
 rm -rf %{buildroot}
