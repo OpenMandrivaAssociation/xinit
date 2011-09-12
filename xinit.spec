@@ -66,7 +66,7 @@ xinit will kill the X server and then terminate.
 %make
 
 %if !%{bootstrap}
-%{__cc} -o ck-xinit-session %ldflags \
+%{__cc} -o ck-xinit-session %{ldflags} \
 	`pkg-config --cflags ck-connector dbus-1` $RPM_OPT_FLAGS \
 	$RPM_SOURCE_DIR/ck-xinit-session.c \
 	`pkg-config --libs ck-connector dbus-1`
@@ -82,6 +82,7 @@ install -m755 ck-xinit-session %{buildroot}%{_bindir}
 
 #don't use xorg xinitrc file, use our own, provided by xinitrc package
 rm -fr %{buildroot}%{_libdir}/X11/xinit/xinitrc
+rm -rf %{buildroot}%{_sysconfdir}/X11/xinit/xinitrc
 
 %clean
 rm -rf %{buildroot}
