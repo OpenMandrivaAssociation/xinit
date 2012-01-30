@@ -5,7 +5,7 @@
 %{?_with_bootstrap: %{expand: %%define bootstrap 1}}
 
 Name: xinit
-Version: 1.3.1
+Version: 1.3.2
 Release: %mkrel 1
 Summary: Initialize an X session
 Group: System/X11
