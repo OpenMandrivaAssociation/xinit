@@ -90,7 +90,7 @@ xinit will kill the X server and then terminate.
 %if !%{bootstrap}
 %{__cc} -o ck-xinit-session %ldflags \
         `pkg-config --cflags ck-connector dbus-1` $RPM_OPT_FLAGS \
-         %{_sourcedir}/ck-xinit-session.c \
+         %{SOURCE1} \
          `pkg-config --libs ck-connector dbus-1`
 %endif
 
