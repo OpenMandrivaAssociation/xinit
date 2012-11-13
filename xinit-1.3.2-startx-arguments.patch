@@ -1,0 +1,170 @@
+--- startx.cpp.orig	2012-01-28 08:12:51.000000000 +0100
++++ startx.cpp	2012-02-25 16:53:41.000000000 +0100
+@@ -72,8 +72,6 @@ sysclientrc=XINITDIR/xinitrc
+ 
+ userserverrc=$HOME/.xserverrc
+ sysserverrc=XINITDIR/xserverrc
+-defaultclient=XTERM
+-defaultserver=XSERVER
+ defaultclientargs=""
+ defaultserverargs=""
+ defaultdisplay=":0"
+@@ -143,6 +141,18 @@ done
+ defaultdisplay=":$d"
+ unset d
+ 
++if [ -f $userclientrc ]; then
++    defaultclientargs=$userclientrc
++elif [ -f $sysclientrc ]; then
++    defaultclientargs=$sysclientrc
++#if defined(__SCO__) || defined(__UNIXWARE__)
++elif [ -f $scouserclientrc ]; then
++    defaultclientargs=$scouserclientrc
++elif [ -f $scosysclientrc ]; then
++    defaultclientargs=$scosysclientrc
++#endif
++fi
++
+ #if defined(__SCO__) || defined(__UNIXWARE__)
+ 
+ XCOMM SCO -t option: do not start an X server
+@@ -165,13 +175,13 @@ while [ x"$1" != x ]; do
+     /''*|\./''*)
+ 	if [ "$whoseargs" = "client" ]; then
+ 	    if [ x"$client" = x ] && [ x"$clientargs" = x ]; then
+-		client="$1"
++		clientargs="$1"
+ 	    else
+ 		clientargs="$clientargs $1"
+ 	    fi
+ 	else
+ 	    if [ x"$server" = x ] && [ x"$serverargs" = x ]; then
+-		server="$1"
++		serverargs="$1"
+ 	    else
+ 		serverargs="$serverargs $1"
+ 	    fi
+@@ -182,12 +192,18 @@ while [ x"$1" != x ]; do
+ 	;;
+     *)
+ 	if [ "$whoseargs" = "client" ]; then
+-	    clientargs="$clientargs $1"
++            if [ "x$clientargs" = x ]; then
++                clientargs="$defaultclientargs $1"
++            else
++                clientargs="$clientargs $1"
++            fi
++
+ 	else
+ 	    XCOMM display must be the FIRST server argument
+ 	    if [ x"$serverargs" = x ] && @@
+ 		 expr "$1" : ':[0-9][0-9]*$' > /dev/null 2>&1; then
+ 		display="$1"
++                serverargs="$1"
+ 	    else
+ 		serverargs="$serverargs $1"
+ 	    fi
+@@ -197,45 +213,11 @@ while [ x"$1" != x ]; do
+     shift
+ done
+ 
+-XCOMM process client arguments
+-if [ x"$client" = x ]; then
+-    client=$defaultclient
+-
+-    XCOMM For compatibility reasons, only use startxrc if there were no client command line arguments
+-    if [ x"$clientargs" = x ]; then
+-        if [ -f "$userclientrc" ]; then
+-            client=$userclientrc
+-        elif [ -f "$sysclientrc" ]; then
+-            client=$sysclientrc
+-#if defined(__SCO__) || defined(__UNIXWARE__)
+-        elif [ -f "$scouserclientrc" ]; then
+-            client=$scouserclientrc
+-        elif [ -f "$scosysclientrc" ]; then
+-            client=$scosysclientrc
+-#endif
+-        fi
+-    fi
+-fi
+-
+ XCOMM if no client arguments, use defaults
+ if [ x"$clientargs" = x ]; then
+     clientargs=$defaultclientargs
+ fi
+ 
+-XCOMM process server arguments
+-if [ x"$server" = x ]; then
+-    server=$defaultserver
+-
+-    XCOMM For compatibility reasons, only use xserverrc if there were no server command line arguments
+-    if [ x"$serverargs" = x -a x"$display" = x ]; then
+-	if [ -f "$userserverrc" ]; then
+-	    server=$userserverrc
+-	elif [ -f "$sysserverrc" ]; then
+-	    server=$sysserverrc
+-	fi
+-    fi
+-fi
+-
+ XCOMM if no server arguments, use defaults
+ if [ x"$serverargs" = x ]; then
+     serverargs=$defaultserverargs
+@@ -317,22 +299,9 @@ EOF
+     done
+ fi
+ 
+-#if defined(__SCO__) || defined(__UNIXWARE__)
+-if [ "$REMOTE_SERVER" = "TRUE" ]; then
+-        exec SHELL_CMD ${client}
+-else
+-        XINIT "$client" $clientargs -- "$server" $display $serverargs
+-fi
+-#else
+ 
+-#if defined(__APPLE__) || defined(__CYGWIN__)
+-eval XINIT \"$client\" $clientargs -- \"$server\" $display $serverargs
+-#else
+-XINIT "$client" $clientargs -- "$server" $display $serverargs
+-#endif
+-
+-#endif
+-retval=$?
++cleanup () {
++    [ -n "$PID" ] && kill $PID > /dev/null 2>&1
+ 
+ if [ x"$enable_xauth" = x1 ] ; then
+     if [ x"$removelist" != x ]; then
+@@ -360,6 +329,31 @@ screenrestore
+ #if defined(sun)
+ kbd_mode -a
+ #endif
++}
++
++trap cleanup 0
++
++#if defined(__SCO__) || defined(__UNIXWARE__)
++if [ "$REMOTE_SERVER" = "TRUE" ]; then
++        exec SHELL_CMD ${client}
++else
++        XINIT "$client" $clientargs -- "$server" $display $serverargs
++	retval=$?
++fi
++#else
++
++#if defined(__APPLE__) || defined(__CYGWIN__)
++eval XINIT \"$client\" $clientargs -- \"$server\" $display $serverargs
++retval=$?
++#else
++xinit $clientargs -- $serverargs -deferglyphs 16 &
++PID=$!
++wait $PID
++retval=$?
++unset PID
++#endif
++
++#endif
+ 
+-exit $retval
+ 
++exit $retval

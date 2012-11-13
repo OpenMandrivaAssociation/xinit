@@ -1,0 +1,11 @@
+diff -Nrup xinit-1.2.0/startx.cpp xdg/startx.cpp
+--- xinit-1.2.0/startx.cpp	2009-11-05 17:07:28.000000000 -0200
++++ xdg/startx.cpp	2009-11-24 10:52:44.000000000 -0200
+@@ -11,6 +11,7 @@ XCOMM
+ XCOMM Site administrators are STRONGLY urged to write nicer versions.
+ XCOMM
+ 
++unset XDG_SESSION_COOKIE
+ unset DBUS_SESSION_BUS_ADDRESS
+ unset SESSION_MANAGER
+ 
