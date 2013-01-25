@@ -45,13 +45,10 @@ Patch4:		xinit-1.2.0-replace-xterm-for-xvt.patch
 # (cg) use the current vt to maintain the current session status.
 Patch5:		xinit-1.3.2-use-current-vt.patch
 
-#(tpg) from Fedora 
-#Add patch to not switch tty's, so systemd-logind works right with startx
-Patch6:		xinit-1.3.2-systemd-logind.patch
-
 BuildRequires:	libx11-devel >= 1.0.0
 BuildRequires:	x11-util-macros >= 1.0.1
 Requires:	xinitrc
+Requires:	xauth
 
 %if !%{bootstrap}
 # (tpg) systemd's login tool has replaced this
@@ -83,7 +80,6 @@ xinit will kill the X server and then terminate.
 %patch3 -p1 -b .unset
 %patch4 -p1 -b .xvt
 %patch5 -p1 -b .curvt
-%patch5 -p1 -b .logind
 
 #needed by patch1
 #if !% {bootstrap}
