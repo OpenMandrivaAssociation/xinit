@@ -87,6 +87,7 @@ xinit will kill the X server and then terminate.
 #endif
 
 %build
+autoreconf -fi
 %configure2_5x
 %make XINITDIR=/etc/X11/xinit
 
