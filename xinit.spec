@@ -45,7 +45,7 @@ Patch4:		xinit-1.2.0-replace-xterm-for-xvt.patch
 # (cg) use the current vt to maintain the current session status.
 Patch5:		xinit-1.3.2-use-current-vt.patch
 
-BuildRequires:	libx11-devel >= 1.0.0
+BuildRequires:	pkgconfig(x11) >= 1.0.0
 BuildRequires:	x11-util-macros >= 1.0.1
 Requires:	xinitrc
 Requires:	xauth
