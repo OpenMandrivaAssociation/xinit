@@ -1,11 +1,7 @@
-%define bootstrap 0
-
-# Allow --with[out] bootstrap at rpm command line build
-%{?_without_bootstrap: %{expand: %%define bootstrap 0}}
-%{?_with_bootstrap: %{expand: %%define bootstrap 1}}
+%bcond_with	 bootstrap
 
 Name:		xinit
-Version:	1.3.2
+Version:	1.3.3
 Release:	5
 Summary:	Initialize an X session
 License:	MIT
@@ -50,7 +46,7 @@ BuildRequires:	x11-util-macros >= 1.0.1
 Requires:	xinitrc
 Requires:	xauth
 
-%if !%{bootstrap}
+%if !%{with bootstrap}
 # (tpg) systemd's login tool has replaced this
 %if %mdvver < 201300
 BuildRequires:	consolekit-devel
@@ -73,7 +69,7 @@ xinit will kill the X server and then terminate.
 %setup -q -n %{name}-%{version}
 %patch0 -p0 -b .orig
 
-#if !% {bootstrap}
+#if !% {with bootstrap}
 #patch1 -p1 -b .poke-ck
 #endif
 %patch2 -p1 -b .client-session
@@ -82,7 +78,7 @@ xinit will kill the X server and then terminate.
 %patch5 -p1 -b .curvt
 
 #needed by patch1
-#if !% {bootstrap}
+#if !% {with bootstrap}
 #autoreconf -fi
 #endif
 
@@ -92,7 +88,7 @@ autoreconf -fi
 %make XINITDIR=/etc/X11/xinit
 
 
-%if !%{bootstrap}
+%if !%{with bootstrap}
 %if %mdvver < 201300
 %{__cc} -o ck-xinit-session %ldflags \
         `pkg-config --cflags ck-connector dbus-1` $RPM_OPT_FLAGS \
@@ -104,20 +100,20 @@ autoreconf -fi
 
 %install
 %makeinstall_std
-%if !%{bootstrap}
+%if !%{with bootstrap}
 %if %mdvver < 201300
 install -m755 ck-xinit-session %{buildroot}%{_bindir}
 %endif
 %endif
 
 #don't use xorg xinitrc file, use our own, provided by xinitrc package
-rm -fr %{buildroot}%{_libdir}/X11/xinit/xinitrc
+rm -fr %{buildroot}%{_sysconfdir}/X11/xinit/xinitrc
 
 %files
 %defattr(-,root,root)
 %{_bindir}/xinit
 %{_bindir}/startx
-%if !%{bootstrap}
+%if !%{with bootstrap}
 %if %mdvver < 201300
 %{_bindir}/ck-xinit-session
 %endif
