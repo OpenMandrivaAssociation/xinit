@@ -19,10 +19,10 @@ Source0:	http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.
 #   unpatched version (should be "startx /usr/bin/startxfce4")
 #Previous versions of this patch had a bug where xinit would be run twice if some
 #macros were defined.
-Patch0:		xinit-1.3.2-startx-arguments.patch
+Patch0:		xinit-1.3.4-startx-arguments.patch
 
 # (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
-Patch2:		xinit-1.0.4-client-session.patch
+Patch2:		xinit-1.3.4-client-session.patch
 
 # (fc) unset XDG_SESSION_COOKIE in startx (Fedora bug #489999)
 Patch3:		xinit-1.0.9-unset.patch
@@ -31,6 +31,7 @@ Patch3:		xinit-1.0.9-unset.patch
 Patch4:		xinit-1.2.0-replace-xterm-for-xvt.patch
 
 # (cg) use the current vt to maintain the current session status.
+# (tpg) looks like this is not needed ?
 Patch5:		xinit-1.3.2-use-current-vt.patch
 
 BuildRequires:	pkgconfig(x11) >= 1.0.0
@@ -48,11 +49,10 @@ xinit will kill the X server and then terminate.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p0 -b .orig
+%patch0 -p1 -b .orig
 %patch2 -p1 -b .client-session
 %patch3 -p1 -b .unset
 %patch4 -p1 -b .xvt
-%patch5 -p1 -b .curvt
 
 %build
 %configure
