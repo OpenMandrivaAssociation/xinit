@@ -34,6 +34,7 @@ Patch4:		xinit-1.2.0-replace-xterm-for-xvt.patch
 # (tpg) looks like this is not needed ?
 Patch5:		xinit-1.3.2-use-current-vt.patch
 
+Patch6:		0000-xinit-startx-Pass-keeptty.patch
 BuildRequires:	pkgconfig(x11) >= 1.0.0
 BuildRequires:	x11-util-macros >= 1.0.1
 Requires:	xinitrc
@@ -53,6 +54,7 @@ xinit will kill the X server and then terminate.
 %patch2 -p1 -b .client-session
 %patch3 -p1 -b .unset
 %patch4 -p1 -b .xvt
+%patch6 -p1 -b .keeptty
 
 %build
 %configure
