@@ -1,6 +1,6 @@
 Name:		xinit
 Version:	1.3.4
-Release:	1
+Release:	1.1
 Summary:	Initialize an X session
 License:	MIT
 Group:		System/X11
@@ -34,6 +34,8 @@ Patch4:		xinit-1.2.0-replace-xterm-for-xvt.patch
 # (tpg) looks like this is not needed ?
 Patch5:		xinit-1.3.2-use-current-vt.patch
 
+# (tpg) https://issues.openmandriva.org/show_bug.cgi?id=950
+Patch6:		0000-xinit-startx-Pass-keeptty.patch
 BuildRequires:	pkgconfig(x11) >= 1.0.0
 BuildRequires:	x11-util-macros >= 1.0.1
 Requires:	xinitrc
@@ -53,6 +55,7 @@ xinit will kill the X server and then terminate.
 %patch2 -p1 -b .client-session
 %patch3 -p1 -b .unset
 %patch4 -p1 -b .xvt
+%patch6 -p1 -b .keeptty
 
 %build
 %configure
