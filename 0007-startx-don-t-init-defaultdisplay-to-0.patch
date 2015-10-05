@@ -1,0 +1,30 @@
+From c5e40f503420bd61c7a33e082db755c03c070c81 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Wed, 25 Mar 2015 11:04:13 +1000
+Subject: [PATCH 7/8] startx: don't init defaultdisplay to :0
+
+This is misleading - it is always overwritten after looping through the lock
+files.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+---
+ startx.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/startx.cpp b/startx.cpp
+index a9d477b..2a10283 100644
+--- a/startx.cpp
++++ b/startx.cpp
+@@ -56,7 +56,7 @@ defaultclient=XTERM
+ defaultserver=XSERVER
+ defaultclientargs=""
+ defaultserverargs=""
+-defaultdisplay=":0"
++defaultdisplay=""
+ clientargs=""
+ serverargs=""
+ vtarg=""
+-- 
+1.9.0
+

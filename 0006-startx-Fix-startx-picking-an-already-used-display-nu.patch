@@ -1,0 +1,37 @@
+From e07fa99039c0f63ed8f0b142e546ef102321fca0 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Fri, 20 Mar 2015 14:25:44 +0100
+Subject: [PATCH 6/8] startx: Fix startx picking an already used display number
+ when -nolock is used
+
+Currently startx relies on /tmp/.X?-lock being present for automatically
+picking a free display number. This does not work if -nolock is used when
+starting the server, or if the server is started with -displayfd as -displayfd
+implies -nolock.
+
+This is becoming a problem now that -displayfd is getting used by
+display-managers (e.g. gdm), this fixes this by also checking for
+/tmp/.X11-unix/X?
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ startx.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/startx.cpp b/startx.cpp
+index cc8be90..a9d477b 100644
+--- a/startx.cpp
++++ b/startx.cpp
+@@ -120,7 +120,7 @@ enable_xauth=1
+ XCOMM Automatically determine an unused $DISPLAY
+ d=0
+ while true ; do
+-    [ -e /tmp/.X$d-lock ] || break
++    [ -e "/tmp/.X$d-lock" -o -S "/tmp/.X11-unix/X$d" ] || break
+     d=$(($d + 1))
+ done
+ defaultdisplay=":$d"
+-- 
+1.9.0
+

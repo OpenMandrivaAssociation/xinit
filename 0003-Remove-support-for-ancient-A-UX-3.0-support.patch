@@ -1,0 +1,36 @@
+From 1be5f1ae5df1d9b3f29fafe3eb29ea890a628b54 Mon Sep 17 00:00:00 2001
+From: Gaetan Nadon <memsize@videotron.ca>
+Date: Fri, 13 Feb 2015 20:21:51 -0500
+Subject: [PATCH 3/8] Remove support for ancient A/UX 3.0 support
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This was Apple Computer’s implementation of the Unix operating system
+for some of their Macintosh computers. From 1988 to 1995.
+
+Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+---
+ startx.cpp | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/startx.cpp b/startx.cpp
+index ce4713f..8520399 100644
+--- a/startx.cpp
++++ b/startx.cpp
+@@ -326,11 +326,6 @@ if command -v deallocvt > /dev/null 2>&1; then
+ fi
+ #endif
+ 
+-#ifdef macII
+-Xrepair
+-screenrestore
+-#endif
+-
+ #if defined(sun)
+ kbd_mode -a
+ #endif
+-- 
+1.9.0
+

@@ -1,0 +1,26 @@
+From a3a34a393b9aeacc0b41dc9b4608ad2be25564cf Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Wed, 25 Mar 2015 11:08:45 +1000
+Subject: [PATCH 5/8] startx: fix comment typo
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ startx.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/startx.cpp b/startx.cpp
+index 8520399..cc8be90 100644
+--- a/startx.cpp
++++ b/startx.cpp
+@@ -283,7 +283,7 @@ EOF
+ 
+     XCOMM now add the same credentials to the client authority file
+     XCOMM if '$displayname' already exists do not overwrite it as another
+-    XCOMM server man need it. Add them to the '$xserverauthfile' instead.
++    XCOMM server may need it. Add them to the '$xserverauthfile' instead.
+     for displayname in $authdisplay $hostname$authdisplay; do
+         authcookie=`XAUTH list "$displayname" @@
+         | sed -n "s/.*$displayname[[:space:]*].*[[:space:]*]//p"` 2>/dev/null;
+-- 
+1.9.0
+
