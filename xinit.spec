@@ -1,6 +1,6 @@
 Name:		xinit
 Version:	1.3.4
-Release:	7
+Release:	8
 Summary:	Initialize an X session
 License:	MIT
 Group:		System/X11
