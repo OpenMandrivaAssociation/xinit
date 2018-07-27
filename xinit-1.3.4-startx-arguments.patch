@@ -9,7 +9,7 @@
 - defaultserver=XSERVER
   defaultclientargs=""
   defaultserverargs=""
-  defaultdisplay=":0"
+  defaultdisplay=""
 --- 52,57 ----
 ***************
 *** 126,131 ****

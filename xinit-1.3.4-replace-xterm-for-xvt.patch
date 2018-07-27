@@ -1,0 +1,38 @@
+*** xinit-1.3.4/xinit.c.xvt	2014-10-10 00:56:47.000000000 +0200
+--- xinit-1.3.4/xinit.c	2014-10-10 00:56:47.000000000 +0200
+***************
+*** 92,98 ****
+  
+  static char *default_server = "X";
+  static char *default_display = ":0";        /* choose most efficient */
+! static char *default_client[] = {"xterm", "-geometry", "+1+1", "-n", "login", NULL};
+  static char *serverargv[100];
+  static char *clientargv[100];
+  static char **server = serverargv + 2;        /* make sure room for sh .xserverrc args */
+--- 92,98 ----
+  
+  static char *default_server = "X";
+  static char *default_display = ":0";        /* choose most efficient */
+! static char *default_client[] = {"xvt", "-geometry", "+1+1", NULL};
+  static char *serverargv[100];
+  static char *clientargv[100];
+  static char **server = serverargv + 2;        /* make sure room for sh .xserverrc args */
+*** xinit-1.3.4/man/xinit.man.xvt	2014-03-25 10:20:26.000000000 +0100
+--- xinit-1.3.4/man/xinit.man	2014-10-10 00:56:47.000000000 +0200
+***************
+*** 54,60 ****
+  called \fI.xinitrc\fP to run as a shell script to start up client programs.
+  If no such file exists, \fBxinit\fP will use the following as a default:
+  .sp
+! 	xterm  \-geometry  +1+1  \-n  login  \-display  :0
+  .sp
+  .PP
+  If no specific server program is given on the command line,
+--- 54,60 ----
+  called \fI.xinitrc\fP to run as a shell script to start up client programs.
+  If no such file exists, \fBxinit\fP will use the following as a default:
+  .sp
+! 	xvt  \-geometry  +1+1  \-display  :0
+  .sp
+  .PP
+  If no specific server program is given on the command line,
