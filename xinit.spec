@@ -1,13 +1,19 @@
 Name:		xinit
-Version:	1.3.4
-Release:	8
+Version:	1.4.0
+Release:	1
 Summary:	Initialize an X session
 License:	MIT
 Group:		System/X11
 URL:		http://cgit.freedesktop.org/xorg/app/xinit
 Source0:	http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
 
-# (fc) 1.0.2-2mdv readd modifications for startx (argument parsing)
+# Fedora specific patches
+# (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
+Patch1:	xinit-1.0.2-client-session.patch
+# A few fixes submitted upstream, rhbz#1177513, rhbz#1203780
+Patch5:	0003-startx-Make-startx-auto-display-select-work-with-per.patch
+
+# (fc) 1.0.2-2mdv read modifications for startx (argument parsing)
 # This patch is part of the old "startx" patch.
 # We need to check why exactly this patch is needed, but it does these things:
 # - it removes the default client and server from the startx arguments, so if
@@ -19,28 +25,16 @@ Source0:	http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.
 #   unpatched version (should be "startx /usr/bin/startxfce4")
 #Previous versions of this patch had a bug where xinit would be run twice if some
 #macros were defined.
-# (tpg) prolly not needed these days
-#Patch0:		xinit-1.3.4-startx-arguments.patch
-
-# (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
-Patch2:		xinit-1.0.2-client-session.patch
+Patch50:	xinit-1.3.4-startx-arguments.patch
 
 # (fc) unset XDG_SESSION_COOKIE in startx (Fedora bug #489999)
-Patch3:		xinit-1.0.9-unset.patch
+Patch53:	xinit-1.0.9-unset.patch
 
 # (pz) this patch was taken from the old startx.patch
-Patch4:		xinit-1.2.0-replace-xterm-for-xvt.patch
+Patch54:	xinit-1.3.4-replace-xterm-for-xvt.patch
 
-# (tpg) git patches
-Patch6:		0000-xinit-startx-Pass-keeptty.patch
-Patch7:		0001-startx-Don-t-use-GNU-expr-extensions.patch
-Patch8:		0002-Remove-SCO-support-for-SHELL_CMD-and-startx-man-page.patch
-Patch9:		0003-Remove-support-for-ancient-A-UX-3.0-support.patch
-Patch10:	0004-Remove-left-over-launchagents_DATA-in-CLEANFILES.patch
-Patch11:	0005-startx-fix-comment-typo.patch
-Patch12:	0006-startx-Fix-startx-picking-an-already-used-display-nu.patch
-Patch13:	0007-startx-don-t-init-defaultdisplay-to-0.patch
-Patch14:	0008-remove-bogus-escapes.patch
+# (cg) use the current vt to maintain the current session status.
+Patch55: xinit-1.3.2-use-current-vt.patch
 
 BuildRequires:	pkgconfig(x11) >= 1.0.0
 BuildRequires:	x11-util-macros >= 1.0.1
