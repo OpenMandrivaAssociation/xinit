@@ -47,7 +47,7 @@ xinit will kill the X server and then terminate.
 
 %prep
 %setup -q -n %{name}-%{version}
-%apply_patches
+%autopatch -p1
 
 %build
 %configure
