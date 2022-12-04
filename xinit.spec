@@ -1,17 +1,17 @@
 Name:		xinit
-Version:	1.4.1
+Version:	1.4.2
 Release:	1
 Summary:	Initialize an X session
 License:	MIT
 Group:		System/X11
 URL:		http://cgit.freedesktop.org/xorg/app/xinit
-Source0:	http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
+Source0:	http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.xz
 
 # Fedora specific patches
 # (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
-Patch1:	xinit-1.0.2-client-session.patch
+Patch1:		xinit-1.0.2-client-session.patch
 # A few fixes submitted upstream, rhbz#1177513, rhbz#1203780
-Patch5:	0003-startx-Make-startx-auto-display-select-work-with-per.patch
+Patch5:		0003-startx-Make-startx-auto-display-select-work-with-per.patch
 
 # (fc) 1.0.2-2mdv read modifications for startx (argument parsing)
 # This patch is part of the old "startx" patch.
@@ -34,10 +34,9 @@ Patch53:	xinit-1.0.9-unset.patch
 Patch54:	xinit-1.3.4-replace-xterm-for-xvt.patch
 
 BuildRequires:	pkgconfig(x11) >= 1.0.0
-BuildRequires:	x11-util-macros >= 1.0.1
+BuildRequires:	pkgconfig(xorg-macros)
 Requires:	xinitrc
 Requires:	xauth
-Requires:	which
 
 %description
 The xinit program is used to start the X Window System server and a first
@@ -46,15 +45,14 @@ environments that use multiple window systems. When this first client exits,
 xinit will kill the X server and then terminate.
 
 %prep
-%setup -q -n %{name}-%{version}
-%autopatch -p1
+%autosetup -p1
 
 %build
 %configure
-%make XINITDIR=/etc/X11/xinit
+%make_build XINITDIR=/etc/X11/xinit
 
 %install
-%makeinstall_std
+%make_install
 
 #don't use xorg xinitrc file, use our own, provided by xinitrc package
 rm -fr %{buildroot}%{_sysconfdir}/X11/xinit/xinitrc
@@ -62,5 +60,5 @@ rm -fr %{buildroot}%{_sysconfdir}/X11/xinit/xinitrc
 %files
 %{_bindir}/xinit
 %{_bindir}/startx
-%{_mandir}/man1/startx.1*
-%{_mandir}/man1/xinit.1*
+%doc %{_mandir}/man1/startx.1*
+%doc %{_mandir}/man1/xinit.1*
