@@ -4,7 +4,7 @@ Release:	2
 Summary:	Initialize an X session
 License:	MIT
 Group:		System/X11
-URL:		http://cgit.freedesktop.org/xorg/app/xinit
+URL:		https://cgit.freedesktop.org/xorg/app/xinit
 Source0:	http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.xz
 
 # Fedora specific patches
