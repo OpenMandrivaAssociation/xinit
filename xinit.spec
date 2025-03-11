@@ -1,11 +1,11 @@
 Name:		xinit
-Version:	1.4.2
-Release:	2
+Version:	1.4.4
+Release:	1
 Summary:	Initialize an X session
 License:	MIT
 Group:		System/X11
 URL:		https://cgit.freedesktop.org/xorg/app/xinit
-Source0:	http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.xz
+Source0:	https://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.xz
 
 # Fedora specific patches
 # (fc) prevent freeze from applications trying to read stdin (Fedora bug #214649)
