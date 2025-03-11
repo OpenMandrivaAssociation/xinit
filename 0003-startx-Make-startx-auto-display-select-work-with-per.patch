@@ -1,3 +1,5 @@
+Based on:
+
 From 72939fed64b00be4a74dd0e1bf0b418e00ac4c57 Mon Sep 17 00:00:00 2001
 From: Hans de Goede <hdegoede@redhat.com>
 Date: Fri, 20 Mar 2015 14:30:08 +0100
@@ -13,23 +15,15 @@ Signed-off-by: Hans de Goede <hdegoede@redhat.com>
  startx.cpp | 6 +++++-
  1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/startx.cpp b/startx.cpp
-index fe49996..3b0dd86 100644
---- a/startx.cpp
-+++ b/startx.cpp
-@@ -120,7 +120,11 @@ enable_xauth=1
- XCOMM Automatically determine an unused $DISPLAY
+diff -up xinit-1.4.4/startx.in.omv~ xinit-1.4.4/startx.in
+--- xinit-1.4.4/startx.in.omv~	2025-03-11 18:22:01.783036939 +0100
++++ xinit-1.4.4/startx.in	2025-03-11 18:22:35.009322780 +0100
+@@ -145,7 +145,7 @@ fi
+ # Automatically determine an unused $DISPLAY
  d=0
  while true ; do
 -    [ -e "/tmp/.X$d-lock" -o -S "/tmp/.X11-unix/X$d" ] || break
-+    [ -e "/tmp/.X$d-lock" -o -S "/tmp/.X11-unix/X$d" ] ||
-+#ifdef __linux__
-+        grep -q "/tmp/.X11-unix/X$d" "/proc/net/unix" ||
-+#endif
-+        break
++    [ -e "/tmp/.X$d-lock" -o -S "/tmp/.X11-unix/X$d" ] || grep -q "/tmp/.X11-unix/X$d" "/proc/net/unix" || break
      d=$(($d + 1))
  done
  defaultdisplay=":$d"
--- 
-2.3.3
-

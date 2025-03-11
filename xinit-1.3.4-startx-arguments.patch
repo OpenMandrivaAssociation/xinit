@@ -1,200 +1,140 @@
-*** xinit-1.3.4/startx.cpp.orig	2014-09-11 19:31:42.000000000 +0200
---- xinit-1.3.4/startx.cpp	2014-10-10 00:50:26.000000000 +0200
-***************
-*** 52,59 ****
-  
-  userserverrc=$HOME/.xserverrc
-  sysserverrc=XINITDIR/xserverrc
-- defaultclient=XTERM
-- defaultserver=XSERVER
-  defaultclientargs=""
-  defaultserverargs=""
-  defaultdisplay=""
---- 52,57 ----
-***************
-*** 126,131 ****
---- 124,136 ----
-  defaultdisplay=":$d"
-  unset d
-  
-+ if [ -f $userclientrc ]; then
-+     defaultclientargs=$userclientrc
-+ elif [ -f $sysclientrc ]; then
-+     defaultclientargs=$sysclientrc
-+ fi
-+ 
-+ 
-  whoseargs="client"
-  while [ x"$1" != x ]; do
-      case "$1" in
-***************
-*** 133,145 ****
-      /''*|\./''*)
-  	if [ "$whoseargs" = "client" ]; then
-  	    if [ x"$client" = x ] && [ x"$clientargs" = x ]; then
-! 		client="$1"
-  	    else
-  		clientargs="$clientargs $1"
-  	    fi
-  	else
-  	    if [ x"$server" = x ] && [ x"$serverargs" = x ]; then
-! 		server="$1"
-  	    else
-  		serverargs="$serverargs $1"
-  	    fi
---- 138,150 ----
-      /''*|\./''*)
-  	if [ "$whoseargs" = "client" ]; then
-  	    if [ x"$client" = x ] && [ x"$clientargs" = x ]; then
-!                 clientargs="$1"
-  	    else
-  		clientargs="$clientargs $1"
-  	    fi
-  	else
-  	    if [ x"$server" = x ] && [ x"$serverargs" = x ]; then
-! 		serverargs="$1"
-  	    else
-  		serverargs="$serverargs $1"
-  	    fi
-***************
-*** 150,161 ****
-  	;;
-      *)
-  	if [ "$whoseargs" = "client" ]; then
-! 	    clientargs="$clientargs $1"
-  	else
-  	    XCOMM display must be the FIRST server argument
-  	    if [ x"$serverargs" = x ] && @@
-  		 expr "$1" : ':[0-9][0-9]*$' > /dev/null 2>&1; then
-  		display="$1"
-  	    else
-  		serverargs="$serverargs $1"
-  	    fi
---- 155,171 ----
-  	;;
-      *)
-  	if [ "$whoseargs" = "client" ]; then
-!             if [ "x$clientargs" = x ]; then
-!                 clientargs="$defaultclientargs $1"
-!             else
-!                 clientargs="$clientargs $1"
-!             fi
-  	else
-  	    XCOMM display must be the FIRST server argument
-  	    if [ x"$serverargs" = x ] && @@
-  		 expr "$1" : ':[0-9][0-9]*$' > /dev/null 2>&1; then
-  		display="$1"
-+                 serverargs="$1"
-  	    else
-  		serverargs="$serverargs $1"
-  	    fi
-***************
-*** 165,193 ****
-      shift
-  done
-  
-- XCOMM process client arguments
-- if [ x"$client" = x ]; then
--     client=$defaultclient
-- 
--     XCOMM For compatibility reasons, only use startxrc if there were no client command line arguments
--     if [ x"$clientargs" = x ]; then
--         if [ -f "$userclientrc" ]; then
--             client=$userclientrc
--         elif [ -f "$sysclientrc" ]; then
--             client=$sysclientrc
--         fi
--     fi
-- fi
-  
-  XCOMM if no client arguments, use defaults
-  if [ x"$clientargs" = x ]; then
-      clientargs=$defaultclientargs
-  fi
-  
-- XCOMM process server arguments
-- if [ x"$server" = x ]; then
--     server=$defaultserver
-  
-  #ifdef __linux__
-      XCOMM When starting the defaultserver start X on the current tty to avoid
-      XCOMM the startx session being seen as inactive:
---- 175,189 ----
-      shift
-  done
-  
-  
-  XCOMM if no client arguments, use defaults
-  if [ x"$clientargs" = x ]; then
-      clientargs=$defaultclientargs
-  fi
-  
-  
-+ if [ x"$server" = x ]; then
-+     
-  #ifdef __linux__
-      XCOMM When starting the defaultserver start X on the current tty to avoid
-      XCOMM the startx session being seen as inactive:
-***************
-*** 199,212 ****
-      fi
-  #endif
-  
--     XCOMM For compatibility reasons, only use xserverrc if there were no server command line arguments
--     if [ x"$serverargs" = x -a x"$display" = x ]; then
-- 	if [ -f "$userserverrc" ]; then
-- 	    server=$userserverrc
-- 	elif [ -f "$sysserverrc" ]; then
-- 	    server=$sysserverrc
-- 	fi
--     fi
-  fi
-  
-  XCOMM if no server arguments, use defaults
---- 195,200 ----
-***************
-*** 301,312 ****
-      done
-  fi
-  
-! #if defined(__APPLE__) || defined(__CYGWIN__)
-! eval XINIT \"$client\" $clientargs -- \"$server\" $display $serverargs
-! #else
-! XINIT "$client" $clientargs -- "$server" $display $serverargs
-! #endif
-! retval=$?
-  
-  if [ x"$enable_xauth" = x1 ] ; then
-      if [ x"$removelist" != x ]; then
---- 289,296 ----
-      done
-  fi
-  
-! cleanup () {
-!     [ -n "$PID" ] && kill $PID > /dev/null 2>&1
-  
-  if [ x"$enable_xauth" = x1 ] ; then
-      if [ x"$removelist" != x ]; then
-***************
-*** 334,339 ****
---- 318,337 ----
-  #if defined(sun)
-  kbd_mode -a
-  #endif
-+ }
-+ 
-+ trap cleanup 0
-+ 
-+ #if defined(__APPLE__) || defined(__CYGWIN__)
-+ eval XINIT \"$client\" $clientargs -- \"$server\" $display $serverargs
-+ retval=$?
-+ #else
-+ xinit $clientargs -- $serverargs -deferglyphs 16 &
-+ PID=$!
-+ wait $PID
-+ retval=$?
-+ unset PID
-+ #endif
-  
-  exit $retval
-  
+diff -up xinit-1.4.4/startx.in.3~ xinit-1.4.4/startx.in
+--- xinit-1.4.4/startx.in.3~	2025-03-11 18:23:31.243628440 +0100
++++ xinit-1.4.4/startx.in	2025-03-11 18:30:47.439812110 +0100
+@@ -64,8 +64,6 @@ sysclientrc="@XINITDIR@/xinitrc"
+ userserverrc="$HOME/.xserverrc"
+ [ -f "${XSERVERRC}" ] && userserverrc="${XSERVERRC}"
+ sysserverrc="$xinitdir/xserverrc"
+-defaultclient="$xterm"
+-defaultserver="$xserver"
+ defaultclientargs=""
+ defaultserverargs=""
+ defaultdisplay=""
+@@ -151,6 +149,12 @@ done
+ defaultdisplay=":$d"
+ unset d
+ 
++if [ -f $userclientrc ]; then
++    defaultclientargs=$userclientrc
++elif [ -f $sysclientrc ]; then
++    defaultclientargs=$sysclientrc
++fi
++
+ whoseargs="client"
+ while [ "$1" != "" ]; do
+     case "$1" in
+@@ -158,13 +162,13 @@ while [ "$1" != "" ]; do
+     /''*|\./''*)
+ 	if [ "$whoseargs" = "client" ]; then
+ 	    if [ "$client" = "" ] && [ "$clientargs" = "" ]; then
+-		client="$1"
++		clientargs="$1"
+ 	    else
+ 		clientargs="$clientargs $1"
+ 	    fi
+ 	else
+ 	    if [ "$server" = "" ] && [ "$serverargs" = "" ]; then
+-		server="$1"
++		serverargs="$1"
+ 	    else
+ 		serverargs="$serverargs $1"
+ 	    fi
+@@ -175,12 +179,17 @@ while [ "$1" != "" ]; do
+ 	;;
+     *)
+ 	if [ "$whoseargs" = "client" ]; then
+-	    clientargs="$clientargs $1"
++	    if [ "x$clientargs" = x ]; then
++	        clientargs="$defaultclientargs $1"
++	    else
++	        clientargs="$clientargs $1"
++	    fi
+ 	else
+ 	    # display must be the FIRST server argument
+ 	    if [ "$serverargs" = "" ] && \
+ 		 expr "$1" : ':[0-9][0-9]*$' > /dev/null 2>&1; then
+ 		display="$1"
++		serverargs="$1"
+ 	    else
+ 		serverargs="$serverargs $1"
+ 	    fi
+@@ -190,29 +199,12 @@ while [ "$1" != "" ]; do
+     shift
+ done
+ 
+-# process client arguments
+-if [ "$client" = "" ]; then
+-    client="$defaultclient"
+-
+-    # For compatibility reasons, only use startxrc if there were no client command line arguments
+-    if [ "$clientargs" = "" ]; then
+-        if [ -f "$userclientrc" ]; then
+-            client="$userclientrc"
+-        elif [ -f "$sysclientrc" ]; then
+-            client="$sysclientrc"
+-        fi
+-    fi
+-fi
+-
+ # if no client arguments, use defaults
+ if [ "$clientargs" = "" ]; then
+     clientargs="$defaultclientargs"
+ fi
+ 
+-# process server arguments
+ if [ "$server" = "" ]; then
+-    server="$defaultserver"
+-
+ if [ "$(uname -s)" = "Linux" ] ; then
+     # When starting the defaultserver start X on the current tty to avoid
+     # the startx session being seen as inactive:
+@@ -223,15 +215,6 @@ if [ "$(uname -s)" = "Linux" ] ; then
+         vtarg="vt$tty_num -keeptty"
+     fi
+ fi
+-
+-    # For compatibility reasons, only use xserverrc if there were no server command line arguments
+-    if [ "$serverargs" = "" ] && [ "$display" = "" ]; then
+-	if [ -f "$userserverrc" ]; then
+-	    server="$userserverrc"
+-	elif [ -f "$sysserverrc" ]; then
+-	    server="$sysserverrc"
+-	fi
+-    fi
+ fi
+ 
+ # if no server arguments, use defaults
+@@ -319,16 +302,8 @@ EOF
+     done
+ fi
+ 
+-case "$(uname -s)" in
+-CYGWIN_NT*|Darwin)
+-    eval "$xinit" \"$client\" $clientargs -- \"$server\" $display $serverargs
+-    ;;
+-*)
+-    "$xinit" "$client" $clientargs -- "$server" $display $serverargs
+-    ;;
+-esac
+-retval=$?
+-
++cleanup() {
++[ -n "$PID" ] && kill $PID > /dev/null 2>&1
+ if [ "$enable_xauth" = 1 ] ; then
+     if [ "$removelist" != "" ]; then
+         "$xauth" remove $removelist
+@@ -348,5 +323,14 @@ fi
+ if [ "$(uname -s)" = "SunOS" ]; then
+     kbd_mode -a
+ fi
++}
++
++trap cleanup 0
++
++xinit $clientargs -- $serverargs -deferglyphs 16 &
++PID=$!
++wait $PID
++retval=$?
++unset PID
+ 
+ exit $retval

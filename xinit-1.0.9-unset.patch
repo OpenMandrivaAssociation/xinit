@@ -1,11 +1,11 @@
-diff -Nrup xinit-1.2.0/startx.cpp xdg/startx.cpp
---- xinit-1.2.0/startx.cpp	2009-11-05 17:07:28.000000000 -0200
-+++ xdg/startx.cpp	2009-11-24 10:52:44.000000000 -0200
-@@ -11,6 +11,7 @@ XCOMM
- XCOMM Site administrators are STRONGLY urged to write nicer versions.
- XCOMM
+diff -up xinit-1.4.4/startx.in.4~ xinit-1.4.4/startx.in
+--- xinit-1.4.4/startx.in.4~	2025-03-11 18:32:10.017594051 +0100
++++ xinit-1.4.4/startx.in	2025-03-11 18:32:43.295525296 +0100
+@@ -25,6 +25,7 @@ libexecdir="@libexecdir@"
+ mk_cookie="@MCOOKIE@"
+ has_cookie_maker="@HAS_COOKIE_MAKER@"
  
 +unset XDG_SESSION_COOKIE
- unset DBUS_SESSION_BUS_ADDRESS
  unset SESSION_MANAGER
  
+ if [ "$(uname -s)" = "Darwin" ] ; then
