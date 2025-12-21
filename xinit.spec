@@ -33,6 +33,11 @@ Patch53:	xinit-1.0.9-unset.patch
 # (pz) this patch was taken from the old startx.patch
 Patch54:	xinit-1.3.4-replace-xterm-for-xvt.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	pkgconfig(x11) >= 1.0.0
 BuildRequires:	pkgconfig(xorg-macros)
 Requires:	xinitrc
